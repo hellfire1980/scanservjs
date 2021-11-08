@@ -1,5 +1,5 @@
 # Builder image.
-FROM node:14-alpine AS builder
+FROM arm64v8/node:14-alpine AS builder
 ENV APP_DIR=/app
 WORKDIR "$APP_DIR"
 
@@ -15,7 +15,7 @@ COPY packages/server/ "$APP_DIR/packages/server/"
 RUN npm run build
 
 # production image
-FROM node:14-buster-slim
+FROM arm64v8/node:14-buster-slim
 
 # Make it possible to override the UID/GID/username of the user running scanservjs
 ARG UID=2001
@@ -47,6 +47,10 @@ RUN apt-get update \
     /etc/ImageMagick-6/policy.xml \
   && npm install -g npm@7.11.2
 
+# Add Hp drivers
+RUN apt-get install -yq libsane-hpaio
+RUN adduser root lp
+
 # Create a known user
 RUN groupadd -g $GID -o $UNAME
 RUN useradd -o -u $UID -g $GID -m -s /bin/bash $UNAME
@@ -74,6 +78,6 @@ RUN npm install --production
 
 # Change the ownership of config and data since we need to write there
 RUN chown -R $UID:$GID config data /etc/sane.d/net.conf /etc/sane.d/airscan.conf
-USER $UNAME
+USER root
 
 EXPOSE 8080

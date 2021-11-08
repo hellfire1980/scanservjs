@@ -33,5 +33,11 @@ fi
 unset IFS
 set +f
 
-node ./server/server.js
+# Needs to be restarted
+service dbus stop
+if [ -f "/var/run/dbus/system_bus_socket" ]; then
+   rm /var/run/dbus/system_bus_socket
+fi
+service dbus start
 
+node ./server/server.js
