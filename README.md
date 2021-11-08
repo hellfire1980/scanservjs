@@ -37,6 +37,11 @@ docker run -d \
   --privileged brunoalves/scanservjs-rpi:arm64
 ```
 
+If your device is not found, you may need to run this on your host:
+```sh
+sudo chmod a+rw dev/bus/usb/00X/00Y
+```
+
 [![Build Status](https://img.shields.io/github/workflow/status/sbs20/scanservjs/NodeCI?style=for-the-badge)](https://github.com/sbs20/scanservjs/actions)
 [![Code QL Status](https://img.shields.io/github/workflow/status/sbs20/scanservjs/CodeQL?label=CodeQL&style=for-the-badge)](https://github.com/sbs20/scanservjs/actions)
 [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/sbs20/scanservjs?style=for-the-badge)](https://hub.docker.com/r/sbs20/scanservjs)
