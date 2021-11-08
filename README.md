@@ -1,5 +1,42 @@
 # scanservjs
 
+## About this fork
+
+Since i got a raspberry pi 4 laying around and an old printer, i decided to made this and share it with the world.
+
+* Base image changed to compile for arm64
+* Installed libsane-hpaio drivers (for my old HP deskjet F4180)
+* run.sh script restarts dbus service (it's needed in my case)
+
+Credit for the original project should go to [Sam Strachan](https://github.com/sbs20). 
+
+## What i recommend
+
+Check the [original instructions](https://github.com/sbs20/scanservjs/blob/master/docs/docker.md) for returning the 00X and 00Y and run something like this:
+
+```sh
+docker run -d \
+  -p 8080:8080 \
+  -v /var/run/dbus:/var/run/dbus \
+  -v /docker/scanservjs/scans:/app/data/output \
+  --restart always \
+  --name scanservjs-rpi \
+  --device /dev/bus/usb/00X/00Y:/dev/bus/usb/00X/00Y \
+  brunoalves/scanservjs-rpi:arm64
+```
+
+or with "privileged" which is unsafer:
+
+```sh
+docker run -d \
+  -p 8080:8080 \
+  -v /var/run/dbus:/var/run/dbus \
+  -v /docker/scanservjs/scans:/app/data/output \
+  --restart always \
+  --name scanservjs-rpi \
+  --privileged brunoalves/scanservjs-rpi:arm64
+```
+
 [![Build Status](https://img.shields.io/github/workflow/status/sbs20/scanservjs/NodeCI?style=for-the-badge)](https://github.com/sbs20/scanservjs/actions)
 [![Code QL Status](https://img.shields.io/github/workflow/status/sbs20/scanservjs/CodeQL?label=CodeQL&style=for-the-badge)](https://github.com/sbs20/scanservjs/actions)
 [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/sbs20/scanservjs?style=for-the-badge)](https://hub.docker.com/r/sbs20/scanservjs)
