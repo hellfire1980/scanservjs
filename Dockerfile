@@ -39,6 +39,7 @@ RUN apt-get update \
     sane-utils \
     sane-airscan \
     tesseract-ocr \
+    tesseract-ocr-por \
   && sed -i \
     's/policy domain="coder" rights="none" pattern="PDF"/policy domain="coder" rights="read | write" pattern="PDF"'/ \
     /etc/ImageMagick-6/policy.xml \

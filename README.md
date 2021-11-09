@@ -25,21 +25,9 @@ docker run -d \
   brunoalves/scanservjs-rpi:arm64
 ```
 
-or with "privileged" which is unsafer:
-
-```sh
-docker run -d \
-  -p 8080:8080 \
-  -v /var/run/dbus:/var/run/dbus \
-  -v /docker/scanservjs/scans:/app/data/output \
-  --restart always \
-  --name scanservjs-rpi \
-  --privileged brunoalves/scanservjs-rpi:arm64
-```
-
 If your device is not found, you may need to run this on your host:
 ```sh
-sudo chmod a+rw dev/bus/usb/00X/00Y
+sudo chmod a+rw /dev/bus/usb/00X/00Y
 ```
 
 [![Build Status](https://img.shields.io/github/workflow/status/sbs20/scanservjs/NodeCI?style=for-the-badge)](https://github.com/sbs20/scanservjs/actions)
