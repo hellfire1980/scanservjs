@@ -25,10 +25,58 @@ docker run -d \
   brunoalves/scanservjs-rpi:arm64
 ```
 
+or add the "privileged" which is unsafer:
+
+```sh
+docker run -d \
+  -p 8080:8080 \
+  -v /var/run/dbus:/var/run/dbus \
+  -v /docker/scanservjs/scans:/app/data/output \
+  --restart always \
+  --name scanservjs-rpi \
+  --privileged brunoalves/scanservjs-rpi:arm64
+```
+
 If your device is not found, you may need to run this on your host:
 ```sh
 sudo chmod a+rw /dev/bus/usb/00X/00Y
 ```
+
+## Automatically set permissions
+
+In my case, everytime i connected my printer the 00Y was different. So i decided to set the permissions automatically when i connected my printer.
+
+When you run
+```sh
+lsusb
+```
+
+You will see something like this:
+```sh
+Bus XXX Device YYY: ID VENDOR:PRODUCT My awesome printer
+```
+
+Create a script in your desired path '/PATH/script.sh' and add the vendor and product:
+```sh
+#!/bin/sh
+
+bus=$(lsusb | grep "VENDOR:PRODUCT" | tr -d ':'| awk '{print $2}')
+device=$(lsusb | grep "VENDOR:PRODUCT" | tr -d ':'| awk '{print $4}')
+
+sudo chmod a+rw "/dev/bus/usb/$bus/$device"
+```
+
+Set permissions:
+```sh
+sudo chmod +x /PATH/script.sh
+```
+
+Create a new file /etc/udev/rules.d/permission.rules and paste inside:
+```sh
+ATTRS{idVendor}=="VENDOR", ATTRS{idProduct}=="PRODUCT", RUN+="/bin/sh -c '/PATH/script.sh'"
+```
+
+Now everytime the printer is connected, the command will be run. It's useful for things like restarting a docker container if needed.
 
 [![Build Status](https://img.shields.io/github/workflow/status/sbs20/scanservjs/NodeCI?style=for-the-badge)](https://github.com/sbs20/scanservjs/actions)
 [![Code QL Status](https://img.shields.io/github/workflow/status/sbs20/scanservjs/CodeQL?label=CodeQL&style=for-the-badge)](https://github.com/sbs20/scanservjs/actions)
