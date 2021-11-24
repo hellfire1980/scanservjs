@@ -30,14 +30,26 @@ if [ ! -z "$AIRSCAN_DEVICES" ]; then
   done
 fi
 
+# Check if dbus needs to be restarted
+if [ ! -z "$DBUS_WORKAROUND" ]; then
+  workaround=$(echo $DBUS_WORKAROUND)
+  if [ "$workaround" = "true" ]; then
+    STATUS="$(service dbus status > /dev/null || echo 'dbus not running')"
+    if [ "${STATUS}" = "dbus not running" ]; then
+      echo "Restarting dbus. This may take a while... "
+      service dbus stop
+      if [ -f "/var/run/dbus/system_bus_socket" ]; then
+        rm /var/run/dbus/system_bus_socket
+      fi
+      service dbus start
+      echo "dbus restarted"
+    else
+      echo "No need to restart dbus"
+    fi
+  fi
+fi
+
 unset IFS
 set +f
-
-# Needs to be restarted
-service dbus stop
-if [ -f "/var/run/dbus/system_bus_socket" ]; then
-   rm /var/run/dbus/system_bus_socket
-fi
-service dbus start
 
 node ./server/server.js

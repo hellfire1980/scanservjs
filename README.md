@@ -6,7 +6,7 @@ Since i got a raspberry pi 4 laying around and an old printer, i decided to made
 
 * Base image changed to compile for arm64
 * Installed libsane-hpaio drivers (for my old HP deskjet F4180)
-* run.sh script restarts dbus service (it's needed in my case)
+* run.sh script restarts dbus service (if DBUS_WORKAROUND is "true")
 
 Credit for the original project should go to [Sam Strachan](https://github.com/sbs20). 
 
@@ -19,10 +19,11 @@ docker run -d \
   -p 8080:8080 \
   -v /var/run/dbus:/var/run/dbus \
   -v /docker/scanservjs/scans:/app/data/output \
+  -e DBUS_WORKAROUND='false' \
   --restart always \
   --name scanservjs-rpi \
   --device /dev/bus/usb/00X/00Y:/dev/bus/usb/00X/00Y \
-  brunoalves/scanservjs-rpi:arm64
+  brunoalves/scanservjs-rpi:latest
 ```
 
 or add the "privileged" which is unsafer:
@@ -32,9 +33,10 @@ docker run -d \
   -p 8080:8080 \
   -v /var/run/dbus:/var/run/dbus \
   -v /docker/scanservjs/scans:/app/data/output \
+  -e DBUS_WORKAROUND='false' \
   --restart always \
   --name scanservjs-rpi \
-  --privileged brunoalves/scanservjs-rpi:arm64
+  --privileged brunoalves/scanservjs-rpi:latest
 ```
 
 If your device is not found, you may need to run this on your host:

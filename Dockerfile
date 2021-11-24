@@ -66,7 +66,9 @@ ENV \
   # This gets added to scanservjs/server/config.js:devices
   DEVICES="" \
   # Override OCR language
-  OCR_LANG=""
+  OCR_LANG="" \
+  # Restart DBus workaround
+  DBUS_WORKAROUND="false"
 
 # Copy entry point
 COPY run.sh /run.sh
