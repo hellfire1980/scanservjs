@@ -22,7 +22,7 @@ ARG UID=2001
 ARG GID=2001
 ARG UNAME=scanservjs
 
-ENV APP_DIR=/app
+ENV APP_DIR=/app HPLIP_PLUGIN_VERSION=3.18.12
 WORKDIR "$APP_DIR"
 RUN apt-get update \
   && apt-get install -yq curl gpg \
