@@ -49,6 +49,11 @@ if [ ! -z "$DBUS_WORKAROUND" ]; then
   fi
 fi
 
+if [ ! -z ${INSTALL_HP_PLUGIN} ]; then
+    echo "Setting up HP drivers..."
+    bash /setup_scripts/hp_drivers.sh
+fi
+
 unset IFS
 set +f
 

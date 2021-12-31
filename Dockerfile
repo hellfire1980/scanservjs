@@ -49,7 +49,7 @@ RUN apt-get update \
   && npm install -g npm@7.11.2
 
 # Add Hp drivers
-RUN apt-get install -yq libsane-hpaio
+RUN apt-get install -yq libsane-hpaio hplip
 RUN adduser root lp
 
 # Create a known user
@@ -69,6 +69,8 @@ ENV \
   OCR_LANG="" \
   # Restart DBus workaround
   DBUS_WORKAROUND="false"
+
+COPY setup_scripts/* /setup_scripts/
 
 # Copy entry point
 COPY run.sh /run.sh
